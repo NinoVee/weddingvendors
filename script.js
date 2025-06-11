@@ -73,7 +73,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
     await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, date, description }),
+      body: JSON.stringify({ name, email, wedding_date, details }),
     });
   }
 });
