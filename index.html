@@ -22,13 +22,114 @@
     <div class="search-bar">
       <input type="text" id="vendorSearch" placeholder="Search by name or category..." onkeyup="filterVendors()">
       <select id="locationFilter" onchange="filterVendors()">
+        <option value="">All Locations</option>
+        <option value="Los Angeles">Los Angeles</option>
+        <option value="Downey">Downey</option>
+        <option value="Norwalk">Norwalk</option>
+        <option value="Long Beach">Long Beach</option>
+        <option value="Glendale">Glendale</option>
+        <option value="Santa Monica">Santa Monica</option>
+        <option value="Hawthorne">Hawthorne</option>
+        <option value="Beverly Hills">Beverly Hills</option>
+        <option value="Torrance">Torrance</option>
+        <option value="Compton">Compton</option>
+        <option value="Hollywood">Hollywood</option>
+        <option value="Burbank">Burbank</option>
+        <option value="Culver City">Culver City</option>
+        <option value="Inglewood">Inglewood</option>
+        <option value="Santa Clarita">Santa Clarita</option>
+        <option value="Pasadena">Pasadena</option>
+        <option value="Hacienda hills">Hacienda hills</option>
+        <option value="San Dimas">San Dimas</option>
+        <option value="Vannuys">Vannuys</option>
+        <option value="Topanga">Topanga</option>       
+        <option value="San Bernardino">San Bernardino</option>
+        <option value="Upland">Upland</option>        
+        <option value="Claremont ">Claremont </option>    
+        <option value="Orange">Orange</option>
+        <option value="Temecula">Temecula</option>
+        <option value="Newport Beach">Newport Beach</option>
+        <option value="San Juan Capistrano">San Juan Capistrano</option>
+        <option value="Mission Viejo">Mission Viejo</option>
+        <option value="Santa Ana">Santa Ana</option>
+        <option value="Leguna Beach">Leguna Beach</option>
+        <option value="San Clemente">San Clemente</option>
+        <option value="Leguna Niguela">Leguna Niguela</option>
+        <option value="Corona del Mar">Corona del Mar</option>
+        <option value="Hunington Beach">Hunington Beach</option>                
+        <option value="Riverside">Riverside</option>
+        <option value="Rancho Cucamonga">Rancho Cucamonga</option>
+        <option value="Pomona">Pomona</option>
+        <option value="Riverside">Riverside</option>
+        <option value="Chino Hills">Chino Hills</option>
         <!-- Add your location options here -->
       </select>
       <select id="categoryFilter" onchange="filterVendors()">
+        <option value="">All Categories</option>
+        <option value="Catering">Catering</option>
+        <option value="Flourist">Flourist</option>
+        <option value="Decor">Decor</option>
+        <option value="Venue">Venue</option>
+        <option value="Wedding Planning">Wedding Planning</option>
+        <option value="Beautition">Beautition</option>
+        <option value="Barber">Barber</option>
+        <option value="Bartender">Bartender</option>
+        <option value="Makup Artist">Makeup Artist</option>
+        <option value="Tuxedo">Tuxedo</option>
+        <option value="Wedding Dresses">Wedding Dresses</option>
+        <option value="Jeweler">Jeweler</option>
+        <option value="Transportation">Transportation</option>
         <!-- Add your category options here -->
       </select>
     </div>
     <div class="vendor-list" id="vendorList">
+     </div>
+    <div class="vendor-list" id="vendorList">
+  <div class="vendor-card" data-location="Los Angeles" data-category="Decor">
+    <img src="https://via.placeholder.com/250x150" alt="Elegant Events" class="vendor-thumbnail" />
+    <h3>Elegant Events</h3>
+    <p>Category: Decor</p>
+    <p>Location: Los Angeles</p>
+    <p>Email: info@elegantevents.com</p>
+    <p>Link: </p>
+  </div>
+
+  <div class="vendor-card" data-location="Pasadena" data-category="Flourist">
+    <img src="https://via.placeholder.com/250x150" alt="Golden Flowers" class="vendor-thumbnail" />
+    <h3>Golden Golden Flowers</h3>
+    <p>Category: Flourist</p>
+    <p>Location: Pasadena</p>
+    <p>Email: contact@goldenflowers.com</p>
+    <p>Link: </p>
+  </div>
+
+  <div class="vendor-card" data-location="Santa Monica"data-category="Venue">
+    <img src="https://via.placeholder.com/250x150" alt="Forever Venues" class="vendor-thumbnail" />
+    <h3>Forever Venues</h3>
+    <p>Category: Venues</p>
+    <p>Location: Santa Monica</p>
+    <p>Email: bookings@forevervenues.com</p>
+    <p>Link: </p>
+  </div>
+
+  <div class="vendor-card" data-location="San Bernardino" data-category="Wedding Planning">
+    <img src="https://via.placeholder.com/250x150" alt="Planning Network" class="vendor-thumbnail" />
+    <h3>Planner Network</h3>
+    <p>Category: Wedding Planning</p>
+    <p>Location: San Bernardino</p>
+    <p>Email: weddings@weddingplanner.com</p>
+    <p>Link: </p>
+  </div>
+  
+  <div class="vendor-card" data-location="Long Beach" data-category="Catering">
+    <img src="https://via.placeholder.com/250x150" alt="Great Wedding Food" class="vendor-thumbnail" />
+    <h3>Great Wedding Food</h3>
+    <p>Category: Catering</p>
+    <p>Location: Long Beach</p>
+    <p>Email: weddings@weddingplanner.com</p>
+    <p>Link: </p>
+  </div>
+</div> 
       <!-- Vendor cards inserted dynamically or statically -->
     </div>
   </section>
