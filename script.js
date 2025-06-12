@@ -47,7 +47,7 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   } else {
     alert('Vendor submitted!');
     hideModal();
-    await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/hyper-function', {
+    await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/hyper-function', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, location, category, link, description })
@@ -61,17 +61,22 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const email = document.getElementById('newlywedEmail').value;
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
-  
-  const { data, error } = await supabase.from('vendors').insert([{ name, email, wedding_date, details }]);
-  if (error) {
-    alert('Submission failed!');
-  } else {
-    alert('Vendor submitted!');
-    hideModal();
-    await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/newlywed-function', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, wedding_date, details })
-    });
-  }
+
+  await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/newlywed-function', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, wedding_date, details })
+  }).then(async (res) => {
+    if (res.ok) {
+      alert('Newlywed application submitted!');
+      document.getElementById('newlywedForm').reset();
+      hidenewlywedModal();
+    } else {
+      const error = await res.text();
+      alert('Submission failed: ' + error);
+    }
+  }).catch((err) => {
+    console.error("Function call failed:", err);
+    alert('Submission failed. Please try again.');
+  });
 });
