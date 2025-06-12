@@ -68,7 +68,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   } else {
     alert('Vendor submitted!');
     hideModal();
-    await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
+    await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/newlywed-function', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, wedding_date, details })
