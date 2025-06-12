@@ -64,14 +64,14 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   
   const { data, error } = await supabase.from('vendors').insert([{ name, email, wedding_date, details }]);
   if (error) {
-  alert('Submission failed!');
-} else {
-  alert('Vendor submitted!');
-  hideModal();
-  await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, wedding_date, details })
-  });
+    alert('Submission failed!');
+  } else {
+    alert('Vendor submitted!');
+    hideModal();
+    await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, wedding_date, details })
+    });
   }
 });
