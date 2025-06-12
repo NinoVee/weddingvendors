@@ -64,7 +64,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   
   const { data, error } = await supabase.from('vendors').insert([{ name, email, wedding_date, details }]);
   if (error) {
-    alert('Submission failed!');
+  alert('Submission failed!');
 } else {
   alert('Vendor submitted!');
   hideModal();
@@ -72,6 +72,6 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, wedding_date, details })
-    });
+  });
   }
 });
