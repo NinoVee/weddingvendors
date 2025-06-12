@@ -62,18 +62,21 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { data, error } = await supabase.from('newlyweds').insert([{ name, email, wedding_date, details }]);
-  if (error) {
-    console.error("Supabase Error:", error);
-    alert('Submission failed: ' + error.message);
-  } else {
-    alert('Newlywed application submitted!');
-    document.getElementById('newlywedForm').reset();
-    hidenewlywedModal();
-    await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, wedding_date, details }),
-    });
-  }
+  await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, wedding_date, details })
+  }).then(async (res) => {
+    if (res.ok) {
+      alert('Newlywed application submitted!');
+      document.getElementById('newlywedForm').reset();
+      hidenewlywedModal();
+    } else {
+      const error = await res.text();
+      alert('Submission failed: ' + error);
+    }
+  }).catch((err) => {
+    console.error("Function call failed:", err);
+    alert('Submission failed. Please try again.');
+  });
 });
