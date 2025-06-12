@@ -1,6 +1,6 @@
 // script.js
 const supabase = createClient('https://mtbwumonjqhxhkgcvdig.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTA3NTIxNywiZXhwIjoyMDY0NjUxMjE3fQ.B53A9ql-a9GkevUcYVaADZnsuH_XtlK19gVXaqlZN-A');
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o');
 
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
