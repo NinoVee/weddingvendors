@@ -57,7 +57,7 @@ document.getElementById('vendors').addEventListener('submit', async function (e)
   alert('Vendor submitted!');
   hideModal();
 
-  const { error: funcError } = await supabase.functions.invoke('hyper-function', {
+  const { error: funcError } = await supabase.functions.invoke('vendor-function', {
     body: { name, email, location, category, link, description }
   });
 
@@ -74,7 +74,7 @@ document.getElementById('newlyweds').addEventListener('submit', async function (
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { error } = await supabase.functions.invoke('bright-function', {
+  const { error } = await supabase.functions.invoke('newlywed-function', {
     body: { name, email, wedding_date, details }
   });
 
