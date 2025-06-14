@@ -1,6 +1,8 @@
 // script.js
-const supabase = createClient('https://mtbwumonjqhxhkgcvdig.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o');
+const supabase = createClient(
+  'https://mtbwumonjqhxhkgcvdig.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'
+);
 
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
@@ -34,6 +36,7 @@ function filterVendors() {
 
 document.getElementById('vendorForm').addEventListener('submit', async function (e) {
   e.preventDefault();
+
   const name = document.getElementById('vendorName').value;
   const email = document.getElementById('vendorEmail').value;
   const location = document.getElementById('vendorLocation').value;
@@ -41,42 +44,48 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   const link = document.getElementById('vendorLink').value;
   const description = document.getElementById('vendorDescription').value;
 
-  const { data, error } = await supabase.from('vendors').insert([{ name, email, location, category, link, description }]);
+  const { data, error } = await supabase
+    .from('vendors')
+    .insert([{ name, email, location, category, link, description }]);
+
   if (error) {
     alert('Submission failed!');
-  } else {
-    alert('Vendor submitted!');
-    hideModal();
-    await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/hyper-function', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, location, category, link, description })
-    });
+    console.error(error);
+    return;
+  }
+
+  alert('Vendor submitted!');
+  hideModal();
+
+  const { error: funcError } = await supabase.functions.invoke('hyper-function', {
+    body: { name, email, location, category, link, description }
+  });
+
+  if (funcError) {
+    console.error('Function error:', funcError);
   }
 });
 
 document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
   e.preventDefault();
+
   const name = document.getElementById('newlywedName').value;
   const email = document.getElementById('newlywedEmail').value;
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/newlywed-function', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, wedding_date, details })
-  }).then(async (res) => {
-    if (res.ok) {
-      alert('Newlywed application submitted!');
-      document.getElementById('newlywedForm').reset();
-      hidenewlywedModal();
-    } else {
-      const error = await res.text();
-      alert('Submission failed: ' + error);
-    }
-  }).catch((err) => {
-    console.error("Function call failed:", err);
-    alert('Submission failed. Please try again.');
+  const { error } = await supabase.functions.invoke('newlywed-function', {
+    body: { name, email, wedding_date, details }
   });
+
+  if (error) {
+    console.error("Function call failed:", error);
+    alert('Submission failed: ' + error.message);
+    return;
+  }
+
+  alert('Newlywed application submitted!');
+  document.getElementById('newlywedForm').reset();
+  hidenewlywedModal();
 });
+
