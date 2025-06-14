@@ -96,7 +96,7 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   formData.append('description', form.vendorDescription.value);
   if (mediaFile) formData.append('media', mediaFile);
 
-  const response = await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/vendor-function', {
+  const response = await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/hyper-function', {
     method: 'POST',
     body: formData,
   });
@@ -123,8 +123,12 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const details = document.getElementById('weddingDetails').value;
 
   const { error } = await supabase.functions.invoke('newlywed-function', {
-    body: { name, email, wedding_date, details }
-  });
+  body: { name, email, wedding_date, details },
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 
   if (error) {
     console.error("Function call failed:", error);
