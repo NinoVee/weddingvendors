@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('newlywedModal').style.display = 'none';
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('showVendorBtn').addEventListener('click', showModal);
-  document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
- };
+    document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('showVendorBtn').addEventListener('click', showModal);
+    document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
+  };
 
 
   window.filterVendors = () => {
