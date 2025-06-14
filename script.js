@@ -122,15 +122,21 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { data, error } = await supabase.functions.invoke('newlywed-function', {
-    body: { name, email, wedding_date, details }
-  });
+  const response = await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ name, email, wedding_date, details })
+});
 
-  if (error) {
-    console.error("❌ Newlywed function error:", error);
-    showSuccessBanner('Newlywed submission failed.');
-    return;
-  }
+if (!response.ok) {
+  const errorText = await response.text();
+  console.error("❌ Newlywed function error:", errorText);
+  showSuccessBanner('Newlywed submission failed.');
+  return;
+}
+
 
   console.log("✅ Newlywed response:", data);
   showSuccessBanner('✅ Newlywed application submitted!');
