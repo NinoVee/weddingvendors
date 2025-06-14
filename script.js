@@ -3,7 +3,7 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'
 );
 
-// Modal helpers
+// Modal controls
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
@@ -17,7 +17,7 @@ function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
 
-// Banner
+// Success banner
 function showSuccessBanner(message = 'Submission successful!') {
   const banner = document.getElementById('successBanner');
   banner.textContent = message;
@@ -45,7 +45,7 @@ function filterVendors() {
   }
 }
 
-// Load only approved vendors
+// Load approved vendors
 async function loadApprovedVendors() {
   const { data: vendors, error } = await supabase
     .from('vendors')
@@ -53,7 +53,7 @@ async function loadApprovedVendors() {
     .eq('approved', true);
 
   if (error) {
-    console.error('Error loading vendors:', error);
+    console.error('❌ Error loading vendors:', error);
     return;
   }
 
@@ -79,7 +79,7 @@ async function loadApprovedVendors() {
 
 window.addEventListener('DOMContentLoaded', loadApprovedVendors);
 
-// Vendor Form - invokes vendor-function (function must handle DB + media)
+// Vendor Form
 document.getElementById('vendorForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -103,17 +103,17 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Function error:', errorText);
+    console.error('❌ Vendor function error:', errorText);
     showSuccessBanner('Vendor submission failed.');
     return;
   }
 
   hideModal();
   form.reset();
-  showSuccessBanner('Vendor submitted!');
+  showSuccessBanner('✅ Vendor submitted!');
 });
 
-// Newlywed Form - invokes newlywed-function
+// Newlywed Form
 document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -122,21 +122,18 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { error } = await supabase.functions.invoke('newlywed-function', {
-  body: { name, email, wedding_date, details },
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
+  const { data, error } = await supabase.functions.invoke('newlywed-function', {
+    body: { name, email, wedding_date, details }
+  });
 
   if (error) {
-    console.error("Function call failed:", error);
+    console.error("❌ Newlywed function error:", error);
     showSuccessBanner('Newlywed submission failed.');
     return;
   }
 
-  showSuccessBanner('Newlywed application submitted!');
+  console.log("✅ Newlywed response:", data);
+  showSuccessBanner('✅ Newlywed application submitted!');
   document.getElementById('newlywedForm').reset();
   hidenewlywedModal();
 });
