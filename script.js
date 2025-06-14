@@ -1,9 +1,10 @@
-const supabase = createClient(
-  'https://mtbwumonjqhxhkgcvdig.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'
-);
+// Simple Supabase Integration Script
 
-// Modal helpers
+const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
@@ -17,7 +18,6 @@ function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
 
-// Banner
 function showSuccessBanner(message = 'Submission successful!') {
   const banner = document.getElementById('successBanner');
   banner.textContent = message;
@@ -27,7 +27,6 @@ function showSuccessBanner(message = 'Submission successful!') {
   }, 4000);
 }
 
-// Filter vendors
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
@@ -45,7 +44,6 @@ function filterVendors() {
   }
 }
 
-// Load only approved vendors
 async function loadApprovedVendors() {
   const { data: vendors, error } = await supabase
     .from('vendors')
@@ -79,7 +77,6 @@ async function loadApprovedVendors() {
 
 window.addEventListener('DOMContentLoaded', loadApprovedVendors);
 
-// Vendor Form - invokes vendor-function (function must handle DB + media)
 document.getElementById('vendorForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -96,7 +93,7 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   formData.append('description', form.vendorDescription.value);
   if (mediaFile) formData.append('media', mediaFile);
 
-  const response = await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/hyper-function', {
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
     method: 'POST',
     body: formData,
   });
@@ -113,7 +110,6 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   showSuccessBanner('Vendor submitted!');
 });
 
-// Newlywed Form - invokes bright-function
 document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -122,7 +118,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const response = await fetch('https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function', {
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
