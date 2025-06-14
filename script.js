@@ -34,7 +34,7 @@ function filterVendors() {
   }
 }
 
-document.getElementById('vendorform').addEventListener('submit', async function (e) {
+document.getElementById('vendorForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const name = document.getElementById('vendorName').value;
@@ -66,7 +66,7 @@ document.getElementById('vendorform').addEventListener('submit', async function 
   }
 });
 
-document.getElementById('newlywedform').addEventListener('submit', async function (e) {
+document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const name = document.getElementById('newlywedName').value;
