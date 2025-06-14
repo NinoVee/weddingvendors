@@ -34,7 +34,7 @@ function filterVendors() {
   }
 }
 
-document.getElementById('vendorForm').addEventListener('submit', async function (e) {
+document.getElementById('vendors').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const name = document.getElementById('vendorName').value;
@@ -66,7 +66,7 @@ document.getElementById('vendorForm').addEventListener('submit', async function 
   }
 });
 
-document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
+document.getElementById('newlyweds').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const name = document.getElementById('newlywedName').value;
@@ -85,7 +85,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   }
 
   alert('Newlywed application submitted!');
-  document.getElementById('newlywedForm').reset();
+  document.getElementById('newlyweds').reset();
   hidenewlywedModal();
 });
 
