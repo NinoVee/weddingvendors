@@ -1,21 +1,12 @@
-// script.js
 console.log("✅ script.js loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
   const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function showSuccessBanner(message = 'Submission successful!') {
-    const banner = document.getElementById('successBanner');
-    banner.textContent = message;
-    banner.style.display = 'block';
-    setTimeout(() => {
-      banner.style.display = 'none';
-    }, 4000);
-  }
-
+  // Modal functions globally accessible
   window.showModal = () => {
     document.getElementById('vendorModal').style.display = 'flex';
   };
@@ -32,12 +23,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('newlywedModal').style.display = 'none';
   };
 
-    document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('showVendorBtn').addEventListener('click', showModal);
-    document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
-  };
+  // Success banner
+  function showSuccessBanner(message = 'Submission successful!') {
+    const banner = document.getElementById('successBanner');
+    banner.textContent = message;
+    banner.style.display = 'block';
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 4000);
+  }
 
+  // Button listeners
+  document.getElementById('showVendorBtn')?.addEventListener('click', showModal);
+  document.getElementById('showNewlywedBtn')?.addEventListener('click', shownewlywedModal);
 
+  // Filter vendors
   window.filterVendors = () => {
     const keyword = document.getElementById('vendorSearch').value.toLowerCase();
     const location = document.getElementById('locationFilter').value;
@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Load approved vendors
   async function loadApprovedVendors() {
     const { data: vendors, error } = await supabase
       .from('vendors')
@@ -86,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  document.getElementById('vendorForm').addEventListener('submit', async function (e) {
+  // Vendor form submission
+  document.getElementById('vendorForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const form = e.target;
@@ -119,37 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
     showSuccessBanner('Vendor submitted!');
   });
 
-  document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
+  // Newlywed form submission
+  document.getElementById('newlywedForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const name = document.getElementById('newlywedName').value;
-    const email = document.getElementById('newlywedEmail').value;
-    const wedding_date = document.getElementById('weddingDate').value;
-    const details = document.getElementById('weddingDetails').value;
-
-    console.log("📤 Sending to bright-function:", { name, email, wedding_date, details });
-
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, wedding_date, details })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("❌ bright-function failed:", errorText);
-      showSuccessBanner('Newlywed submission failed.');
-      return;
-    }
-
-    const successText = await response.text();
-    console.log("✅ bright-function succeeded:", successText);
-    showSuccessBanner('Newlywed application submitted!');
-    document.getElementById('newlywedForm').reset();
-    hidenewlywedModal();
-  });
-
-  loadApprovedVendors();
-});
+    const name = document.getElementById('n
