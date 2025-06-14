@@ -32,6 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('newlywedModal').style.display = 'none';
   };
 
+  document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('showVendorBtn').addEventListener('click', showModal);
+  document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
+ };
+
+
   window.filterVendors = () => {
     const keyword = document.getElementById('vendorSearch').value.toLowerCase();
     const location = document.getElementById('locationFilter').value;
