@@ -125,4 +125,34 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('newlywedForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const name = document.getElementById('n
+    const name = document.getElementById('newlywedName').value;
+    const email = document.getElementById('newlywedEmail').value;
+    const wedding_date = document.getElementById('weddingDate').value;
+    const details = document.getElementById('weddingDetails').value;
+
+    console.log("📤 Sending to bright-function:", { name, email, wedding_date, details });
+
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, wedding_date, details })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ bright-function failed:", errorText);
+      showSuccessBanner('Newlywed submission failed.');
+      return;
+    }
+
+    const successText = await response.text();
+    console.log("✅ bright-function succeeded:", successText);
+    showSuccessBanner('Newlywed application submitted!');
+    document.getElementById('newlywedForm').reset();
+    hidenewlywedModal();
+  });
+
+  loadApprovedVendors();
+});
