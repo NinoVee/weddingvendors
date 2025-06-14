@@ -74,7 +74,7 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { error } = await supabase.functions.invoke('newlywed-function', {
+  const { error } = await supabase.functions.invoke('bright-function', {
     body: { name, email, wedding_date, details }
   });
 
