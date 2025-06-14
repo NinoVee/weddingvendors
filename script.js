@@ -3,7 +3,7 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'
 );
 
-// Show/hide modal helpers
+// Modal helpers
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
@@ -17,7 +17,7 @@ function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
 
-// Show success banner
+// Banner
 function showSuccessBanner(message = 'Submission successful!') {
   const banner = document.getElementById('successBanner');
   banner.textContent = message;
@@ -27,7 +27,7 @@ function showSuccessBanner(message = 'Submission successful!') {
   }, 4000);
 }
 
-// Filter vendor cards
+// Filter vendors
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
@@ -45,7 +45,7 @@ function filterVendors() {
   }
 }
 
-// Load approved vendors
+// Load only approved vendors
 async function loadApprovedVendors() {
   const { data: vendors, error } = await supabase
     .from('vendors')
@@ -79,57 +79,41 @@ async function loadApprovedVendors() {
 
 window.addEventListener('DOMContentLoaded', loadApprovedVendors);
 
-// Vendor form submission
+// Vendor Form - invokes vendor-function (function must handle DB + media)
 document.getElementById('vendorForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const name = document.getElementById('vendorName').value;
-  const email = document.getElementById('vendorEmail').value;
-  const location = document.getElementById('vendorLocation').value;
-  const category = document.getElementById('vendorCategory').value;
-  const link = document.getElementById('vendorLink').value;
-  const description = document.getElementById('vendorDescription').value;
-  const mediaFile = document.getElementById('vendorMedia').files[0];
+  const form = e.target;
+  const fileInput = document.getElementById('vendorMedia');
+  const mediaFile = fileInput.files[0];
 
-  let media_url = '';
-  if (mediaFile) {
-    const filePath = `${Date.now()}_${mediaFile.name}`;
-    const { data: storageData, error: storageError } = await supabase.storage
-      .from('vendor-media')
-      .upload(filePath, mediaFile);
+  const formData = new FormData();
+  formData.append('name', form.vendorName.value);
+  formData.append('email', form.vendorEmail.value);
+  formData.append('location', form.vendorLocation.value);
+  formData.append('category', form.vendorCategory.value);
+  formData.append('link', form.vendorLink.value);
+  formData.append('description', form.vendorDescription.value);
+  if (mediaFile) formData.append('media', mediaFile);
 
-    if (storageError) {
-      console.error('Upload error:', storageError);
-    } else {
-      const { publicUrl } = supabase.storage
-        .from('vendor-media')
-        .getPublicUrl(filePath).data;
-      media_url = publicUrl;
-    }
-  }
+  const response = await fetch('https://mtbwumonjqhxhkgcvdig.functions.supabase.co/vendor-function', {
+    method: 'POST',
+    body: formData,
+  });
 
-  const { error } = await supabase
-    .from('vendors')
-    .insert([{ name, email, location, category, link, description, media_url, approved: false }]);
-
-  if (error) {
-    console.error('Insert failed:', error);
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Function error:', errorText);
+    showSuccessBanner('Vendor submission failed.');
     return;
   }
 
   hideModal();
+  form.reset();
   showSuccessBanner('Vendor submitted!');
-
-  const { error: funcError } = await supabase.functions.invoke('vendor-function', {
-    body: { name, email, location, category, link, description, media_url }
-  });
-
-  if (funcError) {
-    console.error('Function error:', funcError);
-  }
 });
 
-// Newlywed form submission
+// Newlywed Form - invokes newlywed-function
 document.getElementById('newlywedForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -138,15 +122,13 @@ document.getElementById('newlywedForm').addEventListener('submit', async functio
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { data, error } = await supabase.functions.invoke('newlywed-function', {
+  const { error } = await supabase.functions.invoke('newlywed-function', {
     body: { name, email, wedding_date, details }
   });
 
-  console.log("Function response:", data);
-
   if (error) {
     console.error("Function call failed:", error);
-    showSuccessBanner('Submission failed: ' + error.message);
+    showSuccessBanner('Newlywed submission failed.');
     return;
   }
 
