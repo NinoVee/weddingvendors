@@ -74,15 +74,17 @@ document.getElementById('newlyweds').addEventListener('submit', async function (
   const wedding_date = document.getElementById('weddingDate').value;
   const details = document.getElementById('weddingDetails').value;
 
-  const { error } = await supabase.functions.invoke('newlywed-function', {
-    body: { name, email, wedding_date, details }
-  });
+  const { data, error } = await supabase.functions.invoke('newlywed-function', {
+  body: { name, email, wedding_date, details }
+});
 
-  if (error) {
-    console.error("Function call failed:", error);
-    alert('Submission failed: ' + error.message);
-    return;
-  }
+console.log("Function response:", data);
+
+if (error) {
+  console.error("Function call failed:", error);
+  alert('Submission failed: ' + error.message);
+  return;
+}
 
   alert('Newlywed application submitted!');
   document.getElementById('newlyweds').reset();
