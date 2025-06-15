@@ -1,22 +1,22 @@
+file_path = "/mnt/data/script.js"
+with open(file_path, "w") as f:
+    f.write("""
 console.log("✅ script.js loaded");
 
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'; // replace this for security
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
-
 function hideModal() {
   document.getElementById('vendorModal').style.display = 'none';
 }
-
 function shownewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'flex';
 }
-
 function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
@@ -34,8 +34,8 @@ function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
   const category = document.getElementById('categoryFilter').value;
-  const cards = document.getElementsByClassName('vendor-card');
 
+  const cards = document.getElementsByClassName('vendor-card');
   for (let card of cards) {
     const text = card.textContent.toLowerCase();
     const matchText = text.includes(keyword);
@@ -77,10 +77,10 @@ async function loadApprovedVendors() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('showVendorBtn').addEventListener('click', showModal);
-  document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
+  document.getElementById('showVendorBtn')?.addEventListener('click', showModal);
+  document.getElementById('showNewlywedBtn')?.addEventListener('click', shownewlywedModal);
 
-  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
+  document.getElementById('vendorForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const fileInput = document.getElementById('vendorMedia');
@@ -111,14 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
     showSuccessBanner('Vendor submitted!');
   });
 
-  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
+  document.getElementById('newlywedForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('newlywedName').value;
     const email = document.getElementById('newlywedEmail').value;
     const wedding_date = document.getElementById('weddingDate').value;
     const details = document.getElementById('weddingDetails').value;
-
-    console.log("📤 Submitting:", { name, email, wedding_date, details });
 
     const response = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
       method: 'POST',
@@ -129,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!response.ok) {
-      console.error("❌ Function error:", await response.text());
+      console.error("❌ bright-function failed:", await response.text());
       showSuccessBanner('Newlywed submission failed.');
       return;
     }
@@ -141,3 +139,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadApprovedVendors();
 });
+""")
+file_path
