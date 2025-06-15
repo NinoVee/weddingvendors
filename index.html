@@ -4,42 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding Vendor Portal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Success Banner -->
+  <div id="successBanner" style="display:none; position:fixed; top:0; width:100%; background:#4CAF50; color:white; text-align:center; padding:1rem; z-index:1000;">
+    Submission successful!
+  </div>
+
+  <!-- Hero Image -->
   <div class="header-image">
     <img src="https://i.imgur.com/mAjz1mz.jpeg" alt="Wedding Image" style="width: 100%; height: auto;">
   </div>
 
+  <!-- Header -->
   <header style="font-family: 'Poppins', Times New Roman; text-align: center; padding: 1rem;">
     <h1>The Online Wedding Vendors</h1>
     <p>Find and manage the perfect vendors for your special day</p>
   </header>
 
-
-  <div class="login-buttons">
-    <button class="login-button" onclick="shownewlywedModal()">Newlywed Login</button>
-    <button class="login-button" onclick="showModal()">Vendor Login</button>
+  <!-- Login Buttons -->
+  <div class="login-buttons" style="text-align: center; margin: 1rem 0;">
+    <button class="login-button" id="shownewlywedModal">Newlywed Login</button>
+    <button class="login-button" id="showModal">Vendor Login</button>
   </div>
 
+  <!-- Vendor Search -->
   <section class="section">
     <h2 style="text-align: center;">Search Vendor Directory</h2>
-    <div class="search-bar">
-      <input type="text" id="vendorSearch" placeholder="Search by name or category..." onkeyup="filterVendors()">
+    <div class="search-bar" style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0;">
+      <input type="text" id="vendorSearch" placeholder="Search by name or category..." onkeyup="filterVendors()" />
       <select id="locationFilter" onchange="filterVendors()">
-        <!-- Add your location options here -->
+        <option value="">All Locations</option>
+        <option value="Pomona">Pomona</option>
+        <option value="Chino Hills">Chino Hills</option>
       </select>
       <select id="categoryFilter" onchange="filterVendors()">
-        <!-- Add your category options here -->
+        <option value="">All Categories</option>
+        <option value="Catering">Catering</option>
+        <option value="Florist">Florist</option>
+        <option value="Decor">Decor</option>
+        <option value="Venue">Venue</option>
+        <option value="Wedding Planning">Wedding Planning</option>
+        <option value="Beautician">Beautician</option>
+        <option value="Barber">Barber</option>
+        <option value="Bartender">Bartender</option>
+        <option value="Makeup Artist">Makeup Artist</option>
+        <option value="Tuxedo">Tuxedo</option>
+        <option value="Wedding Dresses">Wedding Dresses</option>
+        <option value="Jeweler">Jeweler</option>
+        <option value="Transportation">Transportation</option>
       </select>
     </div>
-    <div class="vendor-list" id="vendorList">
-      <!-- Vendor cards inserted dynamically or statically -->
-    </div>
+    <div class="vendor-list" id="vendorList"></div>
   </section>
 
-  <div class="modal-overlay" id="newlywedModal">
+  <!-- Newlywed Modal -->
+  <div class="modal-overlay" id="newlywedModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hidenewlywedModal()">&times;</span>
       <h2>Newlywed Application</h2>
@@ -47,30 +69,33 @@
         <input type="text" id="newlywedName" placeholder="Your Name" required />
         <input type="email" id="newlywedEmail" placeholder="Email Address" required />
         <input type="text" id="weddingDate" placeholder="Wedding Date (e.g., 2025-06-15)" required />
-        <textarea id="weddingDetails" placeholder="Tell us about your wedding plans..." rows="4"></textarea>
+        <textarea id="weddingDetails" placeholder="Tell us about your wedding plans..." rows="4" required></textarea>
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
 
-  <div class="modal-overlay" id="vendorModal">
+  <!-- Vendor Modal -->
+  <div class="modal-overlay" id="vendorModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hideModal()">&times;</span>
       <h2>Vendor Application</h2>
       <form id="vendorForm">
         <input type="text" id="vendorName" placeholder="Vendor Name" required />
         <input type="email" id="vendorEmail" placeholder="Email Address" required />
-        <input type="text" id="vendorLocation" placeholder="Location (e.g., Los Angeles)" required />
-        <input type="text" id="vendorCategory" placeholder="Category (e.g., Catering)" required />
-        <input type="text" id="vendorLink" placeholder="Link" required />
-        <textarea id="vendorDescription" placeholder="Describe your services..." rows="4"></textarea>
-        <input type="file" id="vendorMedia" accept="image/*,video/*" multiple />
+        <input type="text" id="vendorLocation" placeholder="Location" required />
+        <input type="text" id="vendorCategory" placeholder="Category" required />
+        <input type="text" id="vendorLink" placeholder="Website Link" required />
+        <textarea id="vendorDescription" placeholder="Describe your services..." rows="4" required></textarea>
+        <input type="file" id="vendorMedia" accept="image/*,video/*" />
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
 
+  <!-- Supabase & App Scripts -->
   <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
