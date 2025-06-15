@@ -8,24 +8,29 @@
 </head>
 <body>
 
+  <!-- Success Banner -->
   <div id="successBanner" style="display:none; position:fixed; top:0; width:100%; background:#4CAF50; color:white; text-align:center; padding:1rem; z-index:1000;">
     Submission successful!
   </div>
 
+  <!-- Hero Image -->
   <div class="header-image">
     <img src="https://i.imgur.com/mAjz1mz.jpeg" alt="Wedding Image" style="width: 100%; height: auto;">
   </div>
 
+  <!-- Header -->
   <header style="font-family: 'Poppins', Times New Roman; text-align: center; padding: 1rem;">
     <h1>The Online Wedding Vendors</h1>
     <p>Find and manage the perfect vendors for your special day</p>
   </header>
 
+  <!-- Login Buttons -->
   <div class="login-buttons" style="text-align: center; margin: 1rem 0;">
     <button class="login-button" id="shownewlywedModal">Newlywed Login</button>
     <button class="login-button" id="showModal">Vendor Login</button>
   </div>
 
+  <!-- Vendor Search -->
   <section class="section">
     <h2 style="text-align: center;">Search Vendor Directory</h2>
     <div class="search-bar" style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0;">
@@ -55,6 +60,7 @@
     <div class="vendor-list" id="vendorList"></div>
   </section>
 
+  <!-- Newlywed Modal -->
   <div class="modal-overlay" id="newlywedModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hidenewlywedModal()">&times;</span>
@@ -69,6 +75,7 @@
     </div>
   </div>
 
+  <!-- Vendor Modal -->
   <div class="modal-overlay" id="vendorModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hideModal()">&times;</span>
@@ -86,8 +93,9 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Supabase & App Scripts -->
   <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
