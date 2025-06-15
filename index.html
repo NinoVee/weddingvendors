@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding Vendor Portal</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
   <!-- Success Banner -->
-  <div id="successBanner" style="display: none; position: fixed; top: 0; width: 100%; background: #4CAF50; color: white; text-align: center; padding: 1rem; z-index: 1000;">
+  <div id="successBanner" style="display:none;position:fixed;top:0;width:100%;background:#4CAF50;color:white;text-align:center;padding:1rem;z-index:1000;">
     Submission successful!
   </div>
 
@@ -18,7 +17,7 @@
     <img src="https://i.imgur.com/mAjz1mz.jpeg" alt="Wedding Image" style="width: 100%; height: auto;">
   </div>
 
-  <!-- Header -->
+  <!-- Header Text -->
   <header style="font-family: 'Poppins', Times New Roman; text-align: center; padding: 1rem;">
     <h1>The Online Wedding Vendors</h1>
     <p>Find and manage the perfect vendors for your special day</p>
@@ -93,8 +92,9 @@
     </div>
   </div>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
-<script src="script.js"></script>
-
+  <!-- ✅ Supabase Client First -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
+  <!-- ✅ Then Your App Script -->
+  <script src="script.js"></script>
 </body>
 </html>
