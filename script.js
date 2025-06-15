@@ -64,8 +64,8 @@ async function loadApprovedVendors() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
-  document.getElementById('showVendorBtn').addEventListener('click', showModal);
+  document.getElementById('showNewlywedModal').addEventListener('click', shownewlywedModal);
+  document.getElementById('showVendorModal').addEventListener('click', showModal);
 
   document.getElementById('vendorForm').addEventListener('submit', async e => {
     e.preventDefault();
