@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding Vendor Portal</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-
   <!-- Success Banner -->
   <div id="successBanner" style="display: none; position: fixed; top: 0; width: 100%; background: #4CAF50; color: white; text-align: center; padding: 1rem; z-index: 1000;">
     Submission successful!
@@ -28,9 +28,7 @@
   <div class="login-buttons" style="text-align: center; margin: 1rem 0;">
     <button class="login-button" id="showNewlywedBtn">Newlywed Login</button>
     <button class="login-button" id="showVendorBtn">Vendor Login</button>
- </div>
-    <div class="modal-overlay" id="newlywedModal"> ... </div>
-    <div class="modal-overlay" id="vendorModal"> ... </div>
+  </div>
 
   <!-- Vendor Search -->
   <section class="section">
@@ -59,11 +57,7 @@
         <option value="Transportation">Transportation</option>
       </select>
     </div>
-
-    <!-- Vendor Cards -->
-    <div class="vendor-list" id="vendorList">
-      <!-- Filled dynamically -->
-    </div>
+    <div class="vendor-list" id="vendorList"></div>
   </section>
 
   <!-- Newlywed Modal -->
@@ -99,8 +93,7 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
+  <!-- Custom Script -->
   <script src="script.js"></script>
 </body>
 </html>
