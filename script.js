@@ -1,9 +1,11 @@
 console.log("✅ script.js loaded");
 
+// Initialize Supabase client
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // replace with full key
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Modal Controls
 function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
@@ -16,6 +18,8 @@ function shownewlywedModal() {
 function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
+
+// Banner
 function showSuccessBanner(message) {
   const banner = document.getElementById('successBanner');
   banner.textContent = message;
@@ -25,11 +29,13 @@ function showSuccessBanner(message) {
   }, 4000);
 }
 
+// Filter Vendors
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
   const category = document.getElementById('categoryFilter').value;
   const cards = document.getElementsByClassName('vendor-card');
+
   for (let card of cards) {
     const text = card.textContent.toLowerCase();
     const loc = card.getAttribute('data-location');
@@ -43,18 +49,28 @@ function filterVendors() {
   }
 }
 
+// Load Approved Vendors
 async function loadApprovedVendors() {
-  const { data, error } = await supabase.from('vendors').select('*').eq('approved', true);
-  if (error) return console.error('Vendor load error:', error);
+  const { data, error } = await supabase
+    .from('vendors')
+    .select('*')
+    .eq('approved', true);
+
+  if (error) {
+    console.error('❌ Vendor load error:', error);
+    return;
+  }
+
   const container = document.getElementById('vendorList');
   container.innerHTML = '';
+
   data.forEach(vendor => {
     const card = document.createElement('div');
     card.className = 'vendor-card';
     card.setAttribute('data-location', vendor.location);
     card.setAttribute('data-category', vendor.category);
     card.innerHTML = `
-      <img src="${vendor.media_url || 'https://via.placeholder.com/250x150'}" />
+      <img src="${vendor.media_url || 'https://via.placeholder.com/250x150'}" alt="${vendor.name}" />
       <h3>${vendor.name}</h3>
       <p>${vendor.category} – ${vendor.location}</p>
       <p><a href="${vendor.link}" target="_blank">${vendor.link}</a></p>
@@ -63,11 +79,12 @@ async function loadApprovedVendors() {
   });
 }
 
+// Event Handlers
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('shownewlywedModal').addEventListener('click', shownewlywedModal);
   document.getElementById('showModal').addEventListener('click', showModal);
 
-  document.getElementById('vendorForm').addEventListener('submit', async e => {
+  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const file = document.getElementById('vendorMedia').files[0];
@@ -95,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSuccessBanner('Vendor submitted!');
   });
 
-  document.getElementById('newlywedForm').addEventListener('submit', async e => {
+  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('newlywedName').value;
     const email = document.getElementById('newlywedEmail').value;
