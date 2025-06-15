@@ -1,11 +1,6 @@
-file_path = "/mnt/data/script.js"
-with open(file_path, "w") as f:
-    f.write("""
-console.log("✅ script.js loaded");
-
+// ✅ Supabase Client Config
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
-
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function showModal() {
@@ -20,7 +15,6 @@ function shownewlywedModal() {
 function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
-
 function showSuccessBanner(message = 'Submission successful!') {
   const banner = document.getElementById('successBanner');
   banner.textContent = message;
@@ -29,12 +23,10 @@ function showSuccessBanner(message = 'Submission successful!') {
     banner.style.display = 'none';
   }, 4000);
 }
-
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
   const category = document.getElementById('categoryFilter').value;
-
   const cards = document.getElementsByClassName('vendor-card');
   for (let card of cards) {
     const text = card.textContent.toLowerCase();
@@ -46,19 +38,10 @@ function filterVendors() {
 }
 
 async function loadApprovedVendors() {
-  const { data: vendors, error } = await supabase
-    .from('vendors')
-    .select('*')
-    .eq('approved', true);
-
-  if (error) {
-    console.error('Error loading vendors:', error);
-    return;
-  }
-
+  const { data: vendors, error } = await supabase.from('vendors').select('*').eq('approved', true);
+  if (error) return console.error('Error loading vendors:', error);
   const container = document.getElementById('vendorList');
   container.innerHTML = '';
-
   vendors.forEach(vendor => {
     const card = document.createElement('div');
     card.className = 'vendor-card';
@@ -77,15 +60,15 @@ async function loadApprovedVendors() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('showVendorBtn')?.addEventListener('click', showModal);
-  document.getElementById('showNewlywedBtn')?.addEventListener('click', shownewlywedModal);
+  console.log('📦 DOM loaded');
+  document.getElementById('showNewlywedBtn').addEventListener('click', shownewlywedModal);
+  document.getElementById('showVendorBtn').addEventListener('click', showModal);
 
-  document.getElementById('vendorForm')?.addEventListener('submit', async (e) => {
+  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const fileInput = document.getElementById('vendorMedia');
     const mediaFile = fileInput.files[0];
-
     const formData = new FormData();
     formData.append('name', form.vendorName.value);
     formData.append('email', form.vendorEmail.value);
@@ -111,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSuccessBanner('Vendor submitted!');
   });
 
-  document.getElementById('newlywedForm')?.addEventListener('submit', async (e) => {
+  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('newlywedName').value;
     const email = document.getElementById('newlywedEmail').value;
@@ -120,14 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const response = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, wedding_date, details })
     });
 
     if (!response.ok) {
-      console.error("❌ bright-function failed:", await response.text());
+      console.error("❌ bright-function error:", await response.text());
       showSuccessBanner('Newlywed submission failed.');
       return;
     }
@@ -139,5 +120,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadApprovedVendors();
 });
-""")
-file_path
