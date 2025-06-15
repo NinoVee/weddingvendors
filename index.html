@@ -7,29 +7,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Success Banner -->
-  <div id="successBanner" style="display:none;position:fixed;top:0;width:100%;background:#4CAF50;color:white;text-align:center;padding:1rem;z-index:1000;">
+
+  <div id="successBanner" style="display:none; position:fixed; top:0; width:100%; background:#4CAF50; color:white; text-align:center; padding:1rem; z-index:1000;">
     Submission successful!
   </div>
 
-  <!-- Hero Image -->
   <div class="header-image">
     <img src="https://i.imgur.com/mAjz1mz.jpeg" alt="Wedding Image" style="width: 100%; height: auto;">
   </div>
 
-  <!-- Header Text -->
   <header style="font-family: 'Poppins', Times New Roman; text-align: center; padding: 1rem;">
     <h1>The Online Wedding Vendors</h1>
     <p>Find and manage the perfect vendors for your special day</p>
   </header>
 
-  <!-- Login Buttons -->
   <div class="login-buttons" style="text-align: center; margin: 1rem 0;">
     <button class="login-button" id="showNewlywedBtn">Newlywed Login</button>
     <button class="login-button" id="showVendorBtn">Vendor Login</button>
   </div>
 
-  <!-- Vendor Search -->
   <section class="section">
     <h2 style="text-align: center;">Search Vendor Directory</h2>
     <div class="search-bar" style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0;">
@@ -59,8 +55,7 @@
     <div class="vendor-list" id="vendorList"></div>
   </section>
 
-  <!-- Newlywed Modal -->
-  <div class="modal-overlay" id="newlywedModal" style="display: none;">
+  <div class="modal-overlay" id="newlywedModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hidenewlywedModal()">&times;</span>
       <h2>Newlywed Application</h2>
@@ -74,27 +69,25 @@
     </div>
   </div>
 
-  <!-- Vendor Modal -->
-  <div class="modal-overlay" id="vendorModal" style="display: none;">
+  <div class="modal-overlay" id="vendorModal" style="display:none;">
     <div class="modal">
       <span class="close-btn" onclick="hideModal()">&times;</span>
       <h2>Vendor Application</h2>
       <form id="vendorForm">
         <input type="text" id="vendorName" placeholder="Vendor Name" required />
         <input type="email" id="vendorEmail" placeholder="Email Address" required />
-        <input type="text" id="vendorLocation" placeholder="Location (e.g., Los Angeles)" required />
-        <input type="text" id="vendorCategory" placeholder="Category (e.g., Catering)" required />
-        <input type="text" id="vendorLink" placeholder="Website or Profile Link" required />
+        <input type="text" id="vendorLocation" placeholder="Location" required />
+        <input type="text" id="vendorCategory" placeholder="Category" required />
+        <input type="text" id="vendorLink" placeholder="Website Link" required />
         <textarea id="vendorDescription" placeholder="Describe your services..." rows="4" required></textarea>
-        <input type="file" id="vendorMedia" accept="image/*,video/*" multiple />
+        <input type="file" id="vendorMedia" accept="image/*,video/*" />
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- ✅ Supabase Client First -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
-  <!-- ✅ Then Your App Script -->
   <script src="script.js"></script>
 </body>
 </html>
