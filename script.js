@@ -119,7 +119,7 @@ async function loadApprovedVendors() {
     const wedding_date = document.getElementById('weddingDate').value;
     const details = document.getElementById('weddingDetails').value;
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
+    const res = await fetch(`https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, wedding_date, details })
