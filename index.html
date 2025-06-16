@@ -105,18 +105,17 @@
   </section>
 
   <!-- Newlywed Modal -->
-  <div class="modal-overlay" id="newlywedModal">
-    <div class="modal">
-      <span class="close-btn" onclick="hidenewlywedModal()">&times;</span>
-      <h2>Newlywed Application</h2>
-      <form id="newlywedForm">
-        <input type="text" id="newlywedName" placeholder="Your Name" required />
-        <input type="email" id="newlywedEmail" placeholder="Email Address" required />
-        <input type="text" id="weddingDate" placeholder="Wedding Date (e.g., 2025-06-15)" required />
-        <textarea id="weddingDetails" placeholder="Tell us about your wedding plans..." rows="4"></textarea>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+  <div id="newlywedModal" class="modal">
+  <form id="newlywedForm" class="modal-content">
+    <h2>Newlywed Submission</h2>
+    <input type="text" id="newlywedName" placeholder="Full Name" required />
+    <input type="email" id="newlywedEmail" placeholder="Email" required />
+    <input type="date" id="weddingDate" placeholder="Wedding Date" required />
+    <textarea id="weddingDetails" placeholder="Tell us about your wedding"></textarea>
+    <button type="submit">Submit</button>
+    <button type="button" onclick="hidenewlywedModal()">Cancel</button>
+  </form>
+</div>
   </div>
 
   <!-- Vendor Modal -->
