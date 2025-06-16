@@ -160,12 +160,12 @@ header p {
 /* ===== Responsive Tweaks ===== */
 @media (max-width: 600px) {
   .login-buttons {
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
   }
 
   .filter-row {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
   }
 
