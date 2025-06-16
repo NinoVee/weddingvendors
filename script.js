@@ -81,59 +81,68 @@ async function loadApprovedVendors() {
 
 // Event Handlers
   document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('shownewlywedModal').addEventListener('click', shownewlywedModal);
-  document.getElementById('showModal').addEventListener('click', showModal);
+  const vendorButton = document.getElementById('showModal');
+  const newlywedButton = document.getElementById('shownewlywedModal');
+  const vendorForm = document.getElementById('vendorForm');
+  const newlywedForm = document.getElementById('newlywedForm');
 
-  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const file = document.getElementById('vendorMedia').files[0];
-    const formData = new FormData();
-    formData.append('name', form.vendorName.value);
-    formData.append('email', form.vendorEmail.value);
-    formData.append('location', form.vendorLocation.value);
-    formData.append('category', form.vendorCategory.value);
-    formData.append('link', form.vendorLink.value);
-    formData.append('description', form.vendorDescription.value);
-    if (file) formData.append('media', file);
+  if (vendorButton) vendorButton.addEventListener('click', showModal);
+  if (newlywedButton) newlywedButton.addEventListener('click', shownewlywedModal);
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
-      method: 'POST',
-      body: formData,
+  if (vendorForm) {
+    vendorForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const file = document.getElementById('vendorMedia').files[0];
+      const formData = new FormData();
+      formData.append('name', form.vendorName.value);
+      formData.append('email', form.vendorEmail.value);
+      formData.append('location', form.vendorLocation.value);
+      formData.append('category', form.vendorCategory.value);
+      formData.append('link', form.vendorLink.value);
+      formData.append('description', form.vendorDescription.value);
+      if (file) formData.append('media', file);
+
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        console.error(await res.text());
+        return showSuccessBanner('Vendor submission failed.');
+      }
+
+      form.reset();
+      hideModal();
+      showSuccessBanner('Vendor submitted!');
     });
+  }
 
-    if (!res.ok) {
-      console.error(await res.text());
-      return showSuccessBanner('Vendor submission failed.');
-    }
+  if (newlywedForm) {
+    newlywedForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('newlywedName').value;
+      const email = document.getElementById('newlywedEmail').value;
+      const wedding_date = document.getElementById('weddingDate').value;
+      const details = document.getElementById('weddingDetails').value;
 
-    form.reset();
-    hideModal();
-    showSuccessBanner('Vendor submitted!');
-  });
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, wedding_date, details })
+      });
 
-  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('newlywedName').value;
-    const email = document.getElementById('newlywedEmail').value;
-    const wedding_date = document.getElementById('weddingDate').value;
-    const details = document.getElementById('weddingDetails').value;
+      if (!res.ok) {
+        console.error(await res.text());
+        return showSuccessBanner('Newlywed submission failed.');
+      }
 
-    const res = await fetch(`https://mtbwumonjqhxhkgcvdig.supabase.co/functions/v1/bright-function`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, wedding_date, details })
+      newlywedForm.reset();
+      hidenewlywedModal();
+      showSuccessBanner('Newlywed application submitted!');
     });
-
-    if (!res.ok) {
-      console.error(await res.text());
-      return showSuccessBanner('Newlywed submission failed.');
-    }
-
-    document.getElementById('newlywedForm').reset();
-    hidenewlywedModal();
-    showSuccessBanner('Newlywed application submitted!');
-  });
+  }
 
   loadApprovedVendors();
 });
