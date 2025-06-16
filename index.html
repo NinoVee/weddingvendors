@@ -119,8 +119,10 @@
         <input type="email" id="newlywedEmail" placeholder="Email Address" required />
         <input type="text" id="weddingDate" placeholder="Wedding Date (e.g., 2025-06-15)" required />
         <textarea id="weddingDetails" placeholder="Tell us about your wedding plans..." rows="4"></textarea>
+        
+      <div class="modal-buttons">
         <button type="submit">Submit</button>
-        <button type="button" onclick="hidenewlywedModal()">Cancel</button>
+        <button type="button" onclick="hideModal()">Cancel</button>
       </form>
 </div>
   </div>
@@ -140,6 +142,8 @@
         <input type="text" id="vendorLink" placeholder="Link" required />
         <textarea id="vendorDescription" placeholder="Describe your services..." rows="4"></textarea>
         <input type="file" id="vendorMedia" accept="image/*,video/*" multiple />
+
+      <div class="modal-buttons">
         <button type="submit">Submit</button>
         <button type="button" onclick="hidenewlywedModal()">Cancel</button>
       </form>
