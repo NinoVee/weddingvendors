@@ -54,16 +54,18 @@ header p {
   background: #ffe0ef;
 }
 
-/* Search Bar */
-.search-bar {
-  margin: 1rem auto;
-  text-align: center;
+/* Vendor Filter Section - now stacked */
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem auto;
 }
 
-.search-bar input,
-.search-bar select {
+.filter-row input,
+.filter-row select {
   padding: 0.8rem;
-  margin: 0.5rem;
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -152,24 +154,6 @@ header p {
 
 .close-btn:hover {
   color: #d63384;
-}
-
-.filter-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin: 1rem auto;
-  flex-wrap: wrap; /* ensures responsiveness */
-}
-
-.filter-row select {
-  padding: 0.8rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  width: 300px;
-  max-width: 90%;
 }
 
 /* Responsive Enhancements */
