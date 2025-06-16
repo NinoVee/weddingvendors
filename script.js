@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Newlywed Form
-  const newlywedForm = document.getElementById('newlywedForm');
+  const newlywedForm = document.getElementById('newlyweds');
   if (newlywedForm) {
     newlywedForm.addEventListener('submit', async (e) => {
       e.preventDefault();
