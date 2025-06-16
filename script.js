@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
   // Vendor Form
-  const vendorForm = document.getElementById('vendorForm');
+  const vendorForm = document.getElementById('vendors');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
