@@ -57,7 +57,7 @@ header p {
 /* ===== Filter Section (Horizontal on Desktop, Stacks on Mobile) ===== */
 .filter-row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 1rem;
   margin: 2rem auto;
