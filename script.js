@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
   // Vendor Form
-  const vendorForm = document.getElementById('vendorForm');
+  const vendorForm = document.getElementById('vendors');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Newlywed Form
-  const newlywedForm = document.getElementById('newlywedForm');
+  const newlywedForm = document.getElementById('newlyweds');
   if (newlywedForm) {
     newlywedForm.addEventListener('submit', async (e) => {
       e.preventDefault();
