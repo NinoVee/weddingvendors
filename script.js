@@ -1,8 +1,8 @@
 console.log("✅ script.js loaded");
 
-// Initialize Supabase client (make sure the Supabase script is loaded in your HTML)
+// Initialize Supabase client
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o'; // replace with full key
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
@@ -19,10 +19,9 @@ function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
 
-// Banner display
+// Banner
 function showSuccessBanner(message) {
   const banner = document.getElementById('successBanner');
-  if (!banner) return;
   banner.textContent = message;
   banner.style.display = 'block';
   setTimeout(() => {
@@ -30,7 +29,7 @@ function showSuccessBanner(message) {
   }, 4000);
 }
 
-// Vendor Filtering
+// Filter Vendors
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch').value.toLowerCase();
   const location = document.getElementById('locationFilter').value;
@@ -50,7 +49,7 @@ function filterVendors() {
   }
 }
 
-// Load approved vendors from Supabase
+// Load Approved Vendors
 async function loadApprovedVendors() {
   const { data, error } = await supabase
     .from('vendors')
@@ -63,7 +62,6 @@ async function loadApprovedVendors() {
   }
 
   const container = document.getElementById('vendorList');
-  if (!container) return;
   container.innerHTML = '';
 
   data.forEach(vendor => {
@@ -81,86 +79,61 @@ async function loadApprovedVendors() {
   });
 }
 
-// Event Listeners
+// Event Handlers
 document.addEventListener('DOMContentLoaded', () => {
-  const vendorButton = document.getElementById('showModal');
-  const newlywedButton = document.getElementById('shownewlywedModal');
-  const vendorForm = document.getElementById('vendorForm');
-  const newlywedForm = document.getElementById('newlywedForm');
+  document.getElementById('shownewlywedModal').addEventListener('click', shownewlywedModal);
+  document.getElementById('showModal').addEventListener('click', showModal);
 
-  if (vendorButton) vendorButton.addEventListener('click', showModal);
-  if (newlywedButton) newlywedButton.addEventListener('click', shownewlywedModal);
+  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const file = document.getElementById('vendorMedia').files[0];
+    const formData = new FormData();
+    formData.append('name', form.vendorName.value);
+    formData.append('email', form.vendorEmail.value);
+    formData.append('location', form.vendorLocation.value);
+    formData.append('category', form.vendorCategory.value);
+    formData.append('link', form.vendorLink.value);
+    formData.append('description', form.vendorDescription.value);
+    if (file) formData.append('media', file);
 
-  // Handle vendor form submission
-  if (vendorForm) {
-    vendorForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const file = document.getElementById('vendorMedia').files[0];
-      const formData = new FormData();
-
-      formData.append('name', form.vendorName.value);
-      formData.append('email', form.vendorEmail.value);
-      formData.append('location', form.vendorLocation.value);
-      formData.append('category', form.vendorCategory.value);
-      formData.append('link', form.vendorLink.value);
-      formData.append('description', form.vendorDescription.value);
-      if (file) formData.append('media', file);
-
-      try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error('Vendor Error:', errorText);
-          return showSuccessBanner('Vendor submission failed.');
-        }
-
-        form.reset();
-        hideModal();
-        showSuccessBanner('Vendor submitted!');
-      } catch (err) {
-        console.error('Unexpected error:', err);
-        showSuccessBanner('An error occurred during vendor submission.');
-      }
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+      method: 'POST',
+      body: formData,
     });
-  }
 
-  // Handle newlywed form submission
-  if (newlywedForm) {
-    newlywedForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('newlywedName').value;
-      const email = document.getElementById('newlywedEmail').value;
-      const wedding_date = document.getElementById('weddingDate').value;
-      const details = document.getElementById('weddingDetails').value;
+    if (!res.ok) {
+      console.error(await res.text());
+      return showSuccessBanner('Vendor submission failed.');
+    }
 
-      try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, wedding_date, details }),
-        });
+    form.reset();
+    hideModal();
+    showSuccessBanner('Vendor submitted!');
+  });
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error('Newlywed Error:', errorText);
-          return showSuccessBanner('Newlywed submission failed.');
-        }
+  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('newlywedName').value;
+    const email = document.getElementById('newlywedEmail').value;
+    const wedding_date = document.getElementById('weddingDate').value;
+    const details = document.getElementById('weddingDetails').value;
 
-        newlywedForm.reset();
-        hidenewlywedModal();
-        showSuccessBanner('Newlywed application submitted!');
-      } catch (err) {
-        console.error('Unexpected error:', err);
-        showSuccessBanner('An error occurred during newlywed submission.');
-      }
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, wedding_date, details })
     });
-  }
 
-  // Load vendor cards on page load
+    if (!res.ok) {
+      console.error(await res.text());
+      return showSuccessBanner('Newlywed submission failed.');
+    }
+
+    document.getElementById('newlywedForm').reset();
+    hidenewlywedModal();
+    showSuccessBanner('Newlywed application submitted!');
+  });
+
   loadApprovedVendors();
 });
