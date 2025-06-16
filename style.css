@@ -48,7 +48,7 @@ header p {
 .search-bar input,
 .search-bar select {
   padding: 0.8rem;
-  margin: 2rem;
+  margin: 0.3rem;
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
