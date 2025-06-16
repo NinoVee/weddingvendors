@@ -80,7 +80,7 @@ async function loadApprovedVendors() {
 }
 
 // Event Handlers
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('shownewlywedModal').addEventListener('click', shownewlywedModal);
   document.getElementById('showModal').addEventListener('click', showModal);
 
