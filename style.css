@@ -154,6 +154,26 @@ header p {
   color: #d63384;
 }
 
+/* Wrap the filters in a single row */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+/* Ensure all inputs look uniform */
+.filter-row input,
+.filter-row select {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 300px;
+  max-width: 90%;
+}
+
 /* Responsive Enhancements */
 @media (max-width: 600px) {
   .login-buttons {
