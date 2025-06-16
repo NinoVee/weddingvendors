@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('shownewlywedModal').addEventListener('click', shownewlywedModal);
   document.getElementById('showModal').addEventListener('click', showModal);
 
-  document.getElementById('vendorForm').addEventListener('submit', async (e) => {
+  document.getElementById('showModal').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const file = document.getElementById('vendorMedia').files[0];
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSuccessBanner('Vendor submitted!');
   });
 
-  document.getElementById('newlywedForm').addEventListener('submit', async (e) => {
+  document.getElementById('newlywedModal').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('newlywedName').value;
     const email = document.getElementById('newlywedEmail').value;
