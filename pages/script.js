@@ -1,3 +1,5 @@
+import { createClient } from '../lib/supabase.js'
+
 console.log("✅ script.js loaded");
 
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
