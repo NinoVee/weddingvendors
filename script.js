@@ -1,9 +1,5 @@
 console.log("✅ script.js loaded");
 
-// Make sure Supabase is loaded in your HTML via CDN:
-// <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-// Initialize Supabase client properly for frontend usage
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
