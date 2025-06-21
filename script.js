@@ -1,7 +1,7 @@
 console.log("✅ script.js loaded");
 
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'your-anon-key-here';
+const SUPABASE_ANON_KEY = 'your-anon-key-here';  // Replace with your real anon key
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
@@ -73,31 +73,55 @@ async function loadApprovedVendors() {
 // When page loads
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Modal Buttons
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
-  // Vendor Form
+  // Vendor Form Submission
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
       const file = document.getElementById('vendorMedia')?.files[0];
-      const formData = new FormData();
+      let media_url = null;
 
-      formData.append('name', form.vendorName.value);
-      formData.append('email', form.vendorEmail.value);
-      formData.append('location', form.vendorLocation.value);
-      formData.append('category', form.vendorCategory.value);
-      formData.append('link', form.vendorLink.value);
-      formData.append('description', form.vendorDescription.value);
-      if (file) formData.append('media', file);
+      // Upload media file to Supabase Storage
+      if (file) {
+        const { data, error } = await supabase.storage
+          .from('vendor-media') // <-- Your Storage bucket name
+          .upload(`vendors/${Date.now()}_${file.name}`, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (error) {
+          console.error('❌ Media upload error:', error);
+          return alert('Media upload failed.');
+        }
+
+        const { data: publicUrlData } = supabase
+          .storage
+          .from('vendor-media')
+          .getPublicUrl(data.path);
+        media_url = publicUrlData.publicUrl;
+      }
+
+      // Submit form data + media_url to Edge Function
+      const payload = {
+        name: form.vendorName.value,
+        email: form.vendorEmail.value,
+        location: form.vendorLocation.value,
+        category: form.vendorCategory.value,
+        link: form.vendorLink.value,
+        description: form.vendorDescription.value,
+        media_url
+      };
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
           method: 'POST',
-          body: formData,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
@@ -109,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         alert('Vendor submitted!');
         hideModal();
-        loadApprovedVendors(); // Refresh vendor list
+        loadApprovedVendors();
       } catch (err) {
         console.error('Unexpected error:', err);
         alert('An unexpected error occurred.');
@@ -117,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Newlywed Form
+  // Newlywed Form Submission
   const newlywedForm = document.getElementById('newlywedForm');
   if (newlywedForm) {
     newlywedForm.addEventListener('submit', async (e) => {
