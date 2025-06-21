@@ -94,40 +94,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const file = document.getElementById('vendorMedia')?.files[0];
-  const formData = new FormData();
+      e.preventDefault();
+      const form = e.target;
+      const file = document.getElementById('vendorMedia')?.files[0];
+      const formData = new FormData();
 
-  formData.append('name', form.vendorName.value);
-  formData.append('email', form.vendorEmail.value);
-  formData.append('location', form.vendorLocation.value);
-  formData.append('category', form.vendorCategory.value);
-  formData.append('link', form.vendorLink.value);
-  formData.append('description', form.vendorDescription.value);
-  if (file) formData.append('media', file);
+      formData.append('name', form.vendorName.value);
+      formData.append('email', form.vendorEmail.value);
+      formData.append('location', form.vendorLocation.value);
+      formData.append('category', form.vendorCategory.value);
+      formData.append('link', form.vendorLink.value);
+      formData.append('description', form.vendorDescription.value);
+      if (file) formData.append('media', file);
 
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
-      method: 'POST',
-      body: formData,
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error(errorText);
+          return showSuccessBanner('Vendor submission failed.');
+        }
+
+        form.reset();
+        hideModal();
+        showSuccessBanner('Vendor submitted!');
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        showSuccessBanner('An unexpected error occurred.');
+      }
     });
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error(errorText);
-      return showSuccessBanner('Vendor submission failed.');
-    }
-
-    // ✅ Move hideModal after successful response
-    form.reset();
-    showSuccessBanner('Vendor submitted!');
-    hideModal();
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    showSuccessBanner('An unexpected error occurred.');
   }
-});
 
   // Newlywed Form
   const newlywedForm = document.getElementById('newlywedForm');
