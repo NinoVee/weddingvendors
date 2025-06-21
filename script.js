@@ -32,32 +32,9 @@ function showSuccessBanner(message) {
   }, 4000);
 }
 
-// Vendor filtering function
-function filterVendors() {
-  const keyword = document.getElementById('vendorSearch')?.value.toLowerCase() || '';
-  const location = document.getElementById('locationFilter')?.value || '';
-  const category = document.getElementById('categoryFilter')?.value || '';
-  const cards = document.getElementsByClassName('vendor-card');
-
-  for (let card of cards) {
-    const text = card.textContent.toLowerCase();
-    const loc = card.getAttribute('data-location');
-    const cat = card.getAttribute('data-category');
-    card.style.display =
-      text.includes(keyword) &&
-      (!location || loc === location) &&
-      (!category || cat === category)
-        ? ''
-        : 'none';
-  }
-}
-
-// Load approved vendors dynamically
+// Load Approved Vendors Dynamically
 async function loadApprovedVendors() {
-  const { data, error } = await supabase
-    .from('vendors')
-    .select('*')
-    .eq('approved', true);
+  const { data, error } = await supabase.from('vendors').select('*').eq('approved', true);
 
   if (error) {
     console.error('❌ Vendor load error:', error);
@@ -84,13 +61,12 @@ async function loadApprovedVendors() {
   });
 }
 
-// Form bindings once DOM is ready
+// Form Submission Handler
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal open buttons
-  document.getElementById('showModal')?.addEventListener('click', showModal);
-  document.getElementById('shownewlywedModal')?.addEventListener('click', showNewlywedModal);
+  document.getElementById('showModal')?.addEventListener('click', () => {
+    document.getElementById('vendorModal').style.display = 'flex';
+  });
 
-  // Vendor Form Submit
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
@@ -117,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok && result.success) {
           form.reset();
-          hideModal();
+          document.getElementById('vendorModal').style.display = 'none';
           showSuccessBanner('Vendor submitted successfully!');
         } else {
           console.error('Vendor submission failed:', result);
@@ -129,6 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  loadApprovedVendors(); // Load vendors at startup
+});
+
+// Success Banner Display
+function showSuccessBanner(message) {
+  const banner = document.getElementById('successBanner');
+  if (!banner) return;
+  banner.textContent = message;
+  banner.style.display = 'block';
+  setTimeout(() => { banner.style.display = 'none'; }, 4000);
+}
 
 
   // Newlywed Form
