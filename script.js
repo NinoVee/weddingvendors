@@ -119,15 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
           return showSuccessBanner('Vendor submission failed.');
         }
 
-        form.reset();
-        hideModal();
-        showSuccessBanner('Vendor submitted!');
-      } catch (err) {
-        console.error('Unexpected error:', err);
-        showSuccessBanner('An unexpected error occurred.');
-      }
-    });
+    // ✅ Move hideModal after successful response
+    form.reset();
+    showSuccessBanner('Vendor submitted!');
+    hideModal();
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    showSuccessBanner('An unexpected error occurred.');
   }
+});
 
   // Newlywed Form
   const newlywedForm = document.getElementById('newlywedForm');
