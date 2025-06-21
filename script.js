@@ -120,7 +120,7 @@ async function loadApprovedVendors() {
           return showSuccessBanner('Vendor submission failed.');
         }
 
-        form.reset();
+        vendorForm.reset();
         showSuccessBanner('Vendor submitted!');
         hideModal();
       } catch (err) {
