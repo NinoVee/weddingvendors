@@ -58,7 +58,7 @@ async function loadApprovedVendors() {
   const { data, error } = await supabase
     .from('vendors')
     .select('*')
-    .eq('approved', null);
+    .eq('approved', true);
 
   if (error) {
     console.error('❌ Vendor load error:', error);
