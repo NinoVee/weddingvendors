@@ -1,4 +1,4 @@
-console.log("✅ script.js loaded");
+iaconsole.log("✅ script.js loaded");
 
 // Make sure Supabase is loaded in your HTML via CDN:
 // <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -108,7 +108,7 @@ if (vendorForm) {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, location, category, link, description })
+        body: JSON.stringify({ name, email, location, category, link, media, description })
       });
 
       if (!res.ok) {
