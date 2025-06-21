@@ -1,38 +1,31 @@
 console.log("✅ script.js loaded");
 
-// Make sure Supabase is loaded in your HTML via CDN:
+// Make sure Supabase is loaded in your HTML via CDN v2:
 // <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 // Initialize Supabase client
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
 
-// Modal Controls
-function showModal() {
-  document.getElementById('vendorModal').style.display = 'flex';
-}
-function hideModal() {
-  document.getElementById('vendorModal').style.display = 'none';
-}
-function shownewlywedModal() {
-  document.getElementById('newlywedModal').style.display = 'flex';
-}
-function hidenewlywedModal() {
-  document.getElementById('newlywedModal').style.display = 'none';
-}
+// Create Supabase client object
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Banner display
+// Modal Controls
+function showModal() { document.getElementById('vendorModal').style.display = 'flex'; }
+function hideModal() { document.getElementById('vendorModal').style.display = 'none'; }
+function showNewlywedModal() { document.getElementById('newlywedModal').style.display = 'flex'; }
+function hideNewlywedModal() { document.getElementById('newlywedModal').style.display = 'none'; }
+
+// Banner display function
 function showSuccessBanner(message) {
   const banner = document.getElementById('successBanner');
   if (!banner) return;
   banner.textContent = message;
   banner.style.display = 'block';
-  setTimeout(() => {
-    banner.style.display = 'none';
-  }, 4000);
+  setTimeout(() => { banner.style.display = 'none'; }, 4000);
 }
 
-// Vendor filtering
+// Vendor filtering function
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch')?.value.toLowerCase() || '';
   const location = document.getElementById('locationFilter')?.value || '';
@@ -52,7 +45,7 @@ function filterVendors() {
   }
 }
 
-// Load approved vendors
+// Load approved vendors dynamically
 async function loadApprovedVendors() {
   const { data, error } = await supabase
     .from('vendors')
@@ -84,13 +77,13 @@ async function loadApprovedVendors() {
   });
 }
 
-// Form and button bindings
+// Form bindings once DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal buttons
-  document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
+  // Modal open buttons
   document.getElementById('showModal')?.addEventListener('click', showModal);
+  document.getElementById('shownewlywedModal')?.addEventListener('click', showNewlywedModal);
 
-  // Vendor Form
+  // Vendor Form Submit
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
@@ -108,20 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (file) formData.append('media', file);
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
           method: 'POST',
           body: formData,
         });
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error(errorText);
-          return showSuccessBanner('Vendor submission failed.');
-        }
+        const result = await response.json();
 
-        form.reset();
-        hideModal();
-        showSuccessBanner('Vendor submitted!');
+        if (response.ok && result.success) {
+          form.reset();
+          hideModal();
+          showSuccessBanner('Vendor submitted successfully!');
+        } else {
+          console.error('Vendor submission failed:', result);
+          showSuccessBanner('Vendor submission failed: ' + (result.message || 'Unknown error.'));
+        }
       } catch (err) {
         console.error('Unexpected error:', err);
         showSuccessBanner('An unexpected error occurred.');
@@ -129,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Newlywed Form
+  // Newlywed Form Submit
   const newlywedForm = document.getElementById('newlywedForm');
   if (newlywedForm) {
     newlywedForm.addEventListener('submit', async (e) => {
@@ -148,12 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!res.ok) {
           const errorText = await res.text();
-          console.error(errorText);
+          console.error('Newlywed submission error:', errorText);
           return showSuccessBanner('Newlywed submission failed.');
         }
 
         newlywedForm.reset();
-        hidenewlywedModal();
+        hideNewlywedModal();
         showSuccessBanner('Newlywed application submitted!');
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -162,6 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initial vendor load
+  // Load vendors immediately
   loadApprovedVendors();
 });
