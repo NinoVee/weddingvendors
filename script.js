@@ -1,4 +1,4 @@
-iaconsole.log("✅ script.js loaded");
+console.log("✅ script.js loaded");
 
 // Make sure Supabase is loaded in your HTML via CDN:
 // <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -6,7 +6,6 @@ iaconsole.log("✅ script.js loaded");
 // Initialize Supabase client
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
 function showModal() {
@@ -85,47 +84,50 @@ async function loadApprovedVendors() {
   });
 }
 
-   // Form and button bindings
-  document.addEventListener('DOMContentLoaded', () => {
+// Form and button bindings
+document.addEventListener('DOMContentLoaded', () => {
   // Modal buttons
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
- // Vendor Form
-const vendorForm = document.getElementById('vendorForm');
-if (vendorForm) {
-  vendorForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('vendorName')?.value;
-    const email = document.getElementById('vendorEmail')?.value;
-    const location = document.getElementById('vendorLocation')?.value;
-    const category = document.getElementById('vendorCategory')?.value;
-    const link = document.getElementById('vendorLink')?.value;
-    const media = document.getElementById('mediaLink')?.value;
-    const description = document.getElementById('vendorDescription')?.value;
+  // Vendor Form
+  const vendorForm = document.getElementById('vendorForm');
+  if (vendorForm) {
+    vendorForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const file = document.getElementById('vendorMedia')?.files[0];
+      const formData = new FormData();
 
-    try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, location, category, link, media, description })
-      });
+      formData.append('name', form.vendorName.value);
+      formData.append('email', form.vendorEmail.value);
+      formData.append('location', form.vendorLocation.value);
+      formData.append('category', form.vendorCategory.value);
+      formData.append('link', form.vendorLink.value);
+      formData.append('description', form.vendorDescription.value);
+      if (file) formData.append('media', file);
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error(errorText);
-        return showSuccessBanner('Vendor submission failed.');
-      }
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+          method: 'POST',
+          body: formData,
+        });
 
-      vendorForm.reset();
-      showSuccessBanner('Vendor submitted!');
-      hideModal();
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      showSuccessBanner('An unexpected error occurred.');
-    }
-  });
-}
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error(errorText);
+          return showSuccessBanner('Vendor submission failed.');
+        }
+
+    // ✅ Move hideModal after successful response
+    form.reset();
+    showSuccessBanner('Vendor submitted!');
+    hideModal();
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    showSuccessBanner('An unexpected error occurred.');
+  }
+});
 
   // Newlywed Form
   const newlywedForm = document.getElementById('newlywedForm');
@@ -151,8 +153,8 @@ if (vendorForm) {
         }
 
         newlywedForm.reset();
-        showSuccessBanner('Newlywed application submitted!');
         hidenewlywedModal();
+        showSuccessBanner('Newlywed application submitted!');
       } catch (err) {
         console.error('Unexpected error:', err);
         showSuccessBanner('An unexpected error occurred.');
