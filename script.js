@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const form = e.target;
       const file = document.getElementById('vendorMedia')?.files[0];
-      const formData = new FormData();
+      const formData = new formData();
 
       formData.append('name', form.vendorName.value);
       formData.append('email', form.vendorEmail.value);
