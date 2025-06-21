@@ -1,7 +1,7 @@
 console.log("✅ script.js loaded");
 
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'your-anon-key-here';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
@@ -70,34 +70,34 @@ async function loadApprovedVendors() {
   });
 }
 
-   // When page loads
-  document.addEventListener('DOMContentLoaded', () => {
+// When page loads
+document.addEventListener('DOMContentLoaded', () => {
 
   // Modal Buttons
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
-  // Vendor Form Submit
+  // Vendor Form
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
+      const file = document.getElementById('vendorMedia')?.files[0];
+      const formData = new FormData();
 
-      const payload = {
-        name: form.vendorName.value,
-        email: form.vendorEmail.value,
-        company_name: form.vendorCompany.value,
-        category: form.vendorCategory.value,
-        location: form.vendorLocation.value,
-        details: form.vendorDescription.value
-      };
+      formData.append('name', form.vendorName.value);
+      formData.append('email', form.vendorEmail.value);
+      formData.append('location', form.vendorLocation.value);
+      formData.append('category', form.vendorCategory.value);
+      formData.append('link', form.vendorLink.value);
+      formData.append('description', form.vendorDescription.value);
+      if (file) formData.append('media', file);
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: formData,
         });
 
         if (!res.ok) {
@@ -107,9 +107,9 @@ async function loadApprovedVendors() {
         }
 
         form.reset();
-        alert('Vendor submitted successfully!');
+        alert('Vendor submitted!');
         hideModal();
-        loadApprovedVendors();
+        loadApprovedVendors(); // Refresh vendor list
       } catch (err) {
         console.error('Unexpected error:', err);
         alert('An unexpected error occurred.');
