@@ -120,13 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
     // ✅ Move hideModal after successful response
-    form.reset();
-    showSuccessBanner('Vendor submitted!');
-    hideModal();
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    showSuccessBanner('An unexpected error occurred.');
-  }
+         form.reset();
+         showSuccessBanner('Vendor submitted!');
+         hideModal();
+      } catch (err) {
+         console.error('Unexpected error:', err);
+         showSuccessBanner('An unexpected error occurred.');
+      }
 });
 
   // Newlywed Form
