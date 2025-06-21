@@ -32,7 +32,7 @@ function showSuccessBanner(message) {
   }, 4000);
 }
 
-// Vendor filtering
+// Vendor filtering function
 function filterVendors() {
   const keyword = document.getElementById('vendorSearch')?.value.toLowerCase() || '';
   const location = document.getElementById('locationFilter')?.value || '';
@@ -52,7 +52,7 @@ function filterVendors() {
   }
 }
 
-// Load approved vendors
+// Load approved vendors dynamically
 async function loadApprovedVendors() {
   const { data, error } = await supabase
     .from('vendors')
@@ -84,13 +84,13 @@ async function loadApprovedVendors() {
   });
 }
 
-// Form and button bindings
+// Form bindings once DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal buttons
-  document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
+  // Modal open buttons
   document.getElementById('showModal')?.addEventListener('click', showModal);
+  document.getElementById('shownewlywedModal')?.addEventListener('click', showNewlywedModal);
 
-  // Vendor Form
+  // Vendor Form Submit
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
@@ -108,26 +108,28 @@ document.addEventListener('DOMContentLoaded', () => {
       if (file) formData.append('media', file);
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
           method: 'POST',
           body: formData,
         });
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error(errorText);
-          return showSuccessBanner('Vendor submission failed.');
-        }
+        const result = await response.json();
 
-        form.reset();
-        hideModal();
-        showSuccessBanner('Vendor submitted!');
+        if (response.ok && result.success) {
+          form.reset();
+          hideModal();
+          showSuccessBanner('Vendor submitted successfully!');
+        } else {
+          console.error('Vendor submission failed:', result);
+          showSuccessBanner('Vendor submission failed: ' + (result.message || 'Unknown error.'));
+        }
       } catch (err) {
         console.error('Unexpected error:', err);
         showSuccessBanner('An unexpected error occurred.');
       }
     });
   }
+
 
   // Newlywed Form
   const newlywedForm = document.getElementById('newlywedForm');
