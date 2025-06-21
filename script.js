@@ -70,34 +70,34 @@ async function loadApprovedVendors() {
   });
 }
 
-// When page loads
-document.addEventListener('DOMContentLoaded', () => {
+   // When page loads
+  document.addEventListener('DOMContentLoaded', () => {
 
   // Modal Buttons
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
-  // Vendor Form
+  // Vendor Form Submit
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
-      const file = document.getElementById('vendorMedia')?.files[0];
-      const formData = new FormData();
 
-      formData.append('name', form.vendorName.value);
-      formData.append('email', form.vendorEmail.value);
-      formData.append('location', form.vendorLocation.value);
-      formData.append('category', form.vendorCategory.value);
-      formData.append('link', form.vendorLink.value);
-      formData.append('description', form.vendorDescription.value);
-      if (file) formData.append('media', file);
+      const payload = {
+        name: form.vendorName.value,
+        email: form.vendorEmail.value,
+        company_name: form.vendorCompany.value,
+        category: form.vendorCategory.value,
+        location: form.vendorLocation.value,
+        details: form.vendorDescription.value
+      };
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
           method: 'POST',
-          body: formData,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
@@ -107,9 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         form.reset();
-        alert('Vendor submitted!');
+        alert('Vendor submitted successfully!');
         hideModal();
-        loadApprovedVendors(); // Refresh vendor list
+        loadApprovedVendors();
       } catch (err) {
         console.error('Unexpected error:', err);
         alert('An unexpected error occurred.');
