@@ -13,8 +13,10 @@ function showModal() {
   document.getElementById('vendorModal').style.display = 'flex';
 }
 function hideModal() {
-  document.getElementById('vendorModal').style.display = 'none';
+  const modal = document.getElementById('vendorModal') || document.getElementById('vendorFormModal');
+  if (modal) modal.style.display = 'none';
 }
+
 function shownewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'flex';
 }
