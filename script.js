@@ -101,6 +101,7 @@ if (vendorForm) {
     const location = document.getElementById('vendorLocation')?.value;
     const category = document.getElementById('vendorCategory')?.value;
     const link = document.getElementById('vendorLink')?.value;
+    const media = document.getElementById('mediaLink')?.value;
     const description = document.getElementById('vendorDescription')?.value;
 
     try {
