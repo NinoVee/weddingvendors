@@ -85,8 +85,8 @@ async function loadApprovedVendors() {
   });
 }
 
-// Form and button bindings
-document.addEventListener('DOMContentLoaded', () => {
+   // Form and button bindings
+  document.addEventListener('DOMContentLoaded', () => {
   // Modal buttons
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
