@@ -86,19 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = document.getElementById('vendorMedia')?.files[0];
       const formData = new FormData();
 
-      formData.append('name', form.vendorName.value);
-      formData.append('email', form.vendorEmail.value);
-      formData.append('location', form.vendorLocation.value);
-      formData.append('category', form.vendorCategory.value);
-      formData.append('link', form.vendorLink.value);
-      formData.append('description', form.vendorDescription.value);
-      if (file) formData.append('media', file);
+      const name = document.getElementById('vendorName')?.value;
+      const email = document.getElementById('vendorEmail')?.value;
+      const location = document.getElementById('vendorLocation')?.value;
+      const category = document.getElementById('vendorCategory')?.value;
+      const link = document.getElementById('vendorLink')?.value;
+      const media = document.getElementById('vendormedia')?.value;
+      const description = document.getElementById('vendorDescription')?.value;
 
-      try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
-          method: 'POST',
-          body: formData,
-        });
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, location, category, link, media, description })
+     });
 
         if (!res.ok) {
           const errorText = await res.text();
