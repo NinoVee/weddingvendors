@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
