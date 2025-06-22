@@ -120,3 +120,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadApprovedVendors();
 });
+
+// Newlywed Login Logic
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    if (!email) return alert("Please enter your email.");
+    await supabase.from('newlyweds').insert([{ email }]);
+    localStorage.setItem('loggedIn', 'true');
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('vendorSection').style.display = 'block';
+    loadApprovedVendors();
+  });
+}
+
+function isLoggedIn() {
+  return localStorage.getItem('loggedIn') === 'true';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!isLoggedIn()) {
+    document.getElementById('vendorSection').style.display = 'none';
+    document.getElementById('loginModal').style.display = 'flex';
+  } else {
+    document.getElementById('vendorSection').style.display = 'block';
+    loadApprovedVendors();
+  }
+});
+
