@@ -1,8 +1,10 @@
 console.log("✅ script.js loaded");
 
+// Initialize Supabase client correctly
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';  // Replace with your real anon key
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
 function showModal() {
@@ -18,29 +20,20 @@ function hidenewlywedModal() {
   document.getElementById('newlywedModal').style.display = 'none';
 }
 
-// Vendor Filtering
-function filterVendors() {
-  const keyword = document.getElementById('vendorSearch')?.value.toLowerCase() || '';
-  const location = document.getElementById('locationFilter')?.value || '';
-  const category = document.getElementById('categoryFilter')?.value || '';
-  const cards = document.getElementsByClassName('vendor-card');
-
-  for (let card of cards) {
-    const text = card.textContent.toLowerCase();
-    const loc = card.getAttribute('data-location');
-    const cat = card.getAttribute('data-category');
-    card.style.display =
-      text.includes(keyword) &&
-      (!location || loc === location) &&
-      (!category || cat === category)
-        ? ''
-        : 'none';
-  }
+// Banner display
+function showSuccessBanner(message) {
+  const banner = document.getElementById('successBanner');
+  if (!banner) return;
+  banner.textContent = message;
+  banner.style.display = 'block';
+  setTimeout(() => {
+    banner.style.display = 'none';
+  }, 4000);
 }
 
-// Load Approved Vendors
+// Load approved vendors directly from Supabase
 async function loadApprovedVendors() {
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('vendors')
     .select('*')
     .eq('approved', true);
@@ -70,79 +63,44 @@ async function loadApprovedVendors() {
   });
 }
 
-// When page loads
+// Form and button bindings
 document.addEventListener('DOMContentLoaded', () => {
-
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
-  // Vendor Form Submission
-  const vendorForm = document.getElementById('vendorForm');
+  // Vendor form submission directly via Supabase client
+  const vendorForm = document.getElementById('vendors');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const form = e.target;
-      const file = document.getElementById('vendorMedia')?.files[0];
-      let media_url = null;
-
-      // Upload media file to Supabase Storage
-      if (file) {
-        const { data, error } = await supabase.storage
-          .from('vendor-media') // <-- Your Storage bucket name
-          .upload(`vendors/${Date.now()}_${file.name}`, file, {
-            cacheControl: '3600',
-            upsert: false
-          });
-
-        if (error) {
-          console.error('❌ Media upload error:', error);
-          return alert('Media upload failed.');
-        }
-
-        const { data: publicUrlData } = supabase
-          .storage
-          .from('vendor-media')
-          .getPublicUrl(data.path);
-        media_url = publicUrlData.publicUrl;
-      }
-
-      // Submit form data + media_url to Edge Function
-      const payload = {
-        name: form.vendorName.value,
-        email: form.vendorEmail.value,
-        location: form.vendorLocation.value,
-        category: form.vendorCategory.value,
-        link: form.vendorLink.value,
-        description: form.vendorDescription.value,
-        media_url
-      };
+      const name = vendorForm.vendorName.value;
+      const email = vendorForm.vendorEmail.value;
+      const location = vendorForm.vendorLocation.value;
+      const category = vendorForm.vendorCategory.value;
+      const link = vendorForm.vendorLink.value;
+      const description = vendorForm.vendorDescription.value;
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error(errorText);
-          return alert('Vendor submission failed.');
+        const { error } = await client.from("vendors").insert([
+          { name, email, location, category, link, description, approved: false }
+        ]);
+        if (error) {
+          console.error(error);
+          return showSuccessBanner('Vendor submission failed.');
         }
-
-        form.reset();
-        alert('Vendor submitted!');
+        vendorForm.reset();
         hideModal();
+        showSuccessBanner('Vendor submitted!');
         loadApprovedVendors();
       } catch (err) {
         console.error('Unexpected error:', err);
-        alert('An unexpected error occurred.');
+        showSuccessBanner('Unexpected error occurred.');
       }
     });
   }
 
-  // Newlywed Form Submission
-  const newlywedForm = document.getElementById('newlywedForm');
+  // Newlywed form submission through Edge Function
+  const newlywedForm = document.getElementById('newlyweds');
   if (newlywedForm) {
     newlywedForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -161,16 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!res.ok) {
           const errorText = await res.text();
           console.error(errorText);
-          return alert('Newlywed submission failed.');
+          return showSuccessBanner('Newlywed submission failed.');
         }
 
         newlywedForm.reset();
-        alert('Newlywed application submitted!');
         hidenewlywedModal();
-        loadApprovedVendors();
+        showSuccessBanner('Newlywed application submitted!');
       } catch (err) {
         console.error('Unexpected error:', err);
-        alert('An unexpected error occurred.');
+        showSuccessBanner('Unexpected error occurred.');
       }
     });
   }
