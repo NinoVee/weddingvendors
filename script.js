@@ -1,14 +1,22 @@
 console.log("✅ script.js loaded");
 
 const SUPABASE_URL = 'https://mtbwumonjqhxhkgcvdig.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Ynd1bW9uanFoeGhrZ2N2ZGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNzUyMTYsImV4cCI6MjA2NDY1MTIxNn0.QduNZinoGi5IeJfu0Ovi6H4Eh4kCIEeW-RGGypfN57o';  // Replace with your real anon key
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Modal Controls
-function showModal() { document.getElementById('vendorModal').style.display = 'flex'; }
-function hideModal() { document.getElementById('vendorModal').style.display = 'none'; }
-function shownewlywedModal() { document.getElementById('newlywedModal').style.display = 'flex'; }
-function hidenewlywedModal() { document.getElementById('newlywedModal').style.display = 'none'; }
+function showModal() {
+  document.getElementById('vendorModal').style.display = 'flex';
+}
+function hideModal() {
+  document.getElementById('vendorModal').style.display = 'none';
+}
+function shownewlywedModal() {
+  document.getElementById('newlywedModal').style.display = 'flex';
+}
+function hidenewlywedModal() {
+  document.getElementById('newlywedModal').style.display = 'none';
+}
 
 // Vendor Filtering
 function filterVendors() {
@@ -32,14 +40,21 @@ function filterVendors() {
 
 // Load Approved Vendors
 async function loadApprovedVendors() {
-  const { data, error } = await supabase.from('vendors').select('*').eq('approved', true);
+  const { data, error } = await supabase
+    .from('vendors')
+    .select('*')
+    .eq('approved', true);
+
   if (error) {
     console.error('❌ Vendor load error:', error);
     return;
   }
+
   const container = document.getElementById('vendorList');
   if (!container) return;
+
   container.innerHTML = '';
+
   data.forEach(vendor => {
     const card = document.createElement('div');
     card.className = 'vendor-card';
@@ -55,10 +70,13 @@ async function loadApprovedVendors() {
   });
 }
 
+// When page loads
 document.addEventListener('DOMContentLoaded', () => {
+
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
 
+  // Vendor Form Submission
   const vendorForm = document.getElementById('vendorForm');
   if (vendorForm) {
     vendorForm.addEventListener('submit', async (e) => {
@@ -67,10 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = document.getElementById('vendorMedia')?.files[0];
       let media_url = null;
 
+      // Upload media file to Supabase Storage
       if (file) {
         const { data, error } = await supabase.storage
-          .from('vendor-media')
-          .upload(`vendors/${Date.now()}_${file.name}`, file, { upsert: false });
+          .from('vendor-media') // <-- Your Storage bucket name
+          .upload(`vendors/${Date.now()}_${file.name}`, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
 
         if (error) {
           console.error('❌ Media upload error:', error);
@@ -84,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         media_url = publicUrlData.publicUrl;
       }
 
+      // Submit form data + media_url to Edge Function
       const payload = {
         name: form.vendorName.value,
         email: form.vendorEmail.value,
@@ -95,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/hyper-function`, {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/vendor-submission`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -118,35 +141,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Newlywed Form Submission
+  const newlywedForm = document.getElementById('newlywedForm');
+  if (newlywedForm) {
+    newlywedForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('newlywedName')?.value;
+      const email = document.getElementById('newlywedEmail')?.value;
+      const wedding_date = document.getElementById('weddingDate')?.value;
+      const details = document.getElementById('weddingDetails')?.value;
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/bright-function`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, wedding_date, details })
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error(errorText);
+          return alert('Newlywed submission failed.');
+        }
+
+        newlywedForm.reset();
+        alert('Newlywed application submitted!');
+        hidenewlywedModal();
+        loadApprovedVendors();
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        alert('An unexpected error occurred.');
+      }
+    });
+  }
+
   loadApprovedVendors();
 });
-
-// Newlywed Login Logic
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    if (!email) return alert("Please enter your email.");
-    await supabase.from('newlyweds').insert([{ email }]);
-    localStorage.setItem('loggedIn', 'true');
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('vendorSection').style.display = 'block';
-    loadApprovedVendors();
-  });
-}
-
-function isLoggedIn() {
-  return localStorage.getItem('loggedIn') === 'true';
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (!isLoggedIn()) {
-    document.getElementById('vendorSection').style.display = 'none';
-    document.getElementById('loginModal').style.display = 'flex';
-  } else {
-    document.getElementById('vendorSection').style.display = 'block';
-    loadApprovedVendors();
-  }
-});
-
