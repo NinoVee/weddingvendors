@@ -70,8 +70,8 @@ async function loadApprovedVendors() {
   });
 }
 
-// When page loads
-document.addEventListener('DOMContentLoaded', () => {
+  // When page loads
+  document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('shownewlywedModal')?.addEventListener('click', shownewlywedModal);
   document.getElementById('showModal')?.addEventListener('click', showModal);
